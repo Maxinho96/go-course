@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"strings"
+	"time"
 )
 
 type deck []string
@@ -32,10 +33,10 @@ func (d deck) print() {
 }
 
 func (d deck) shuffle() {
-	for i := range d {
-		j := rand.Intn(len(d) - 1)
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(d), func(i, j int) {
 		d[i], d[j] = d[j], d[i]
-	}
+	})
 }
 
 func deal(d deck, handSize int) (deck, deck) {
@@ -43,7 +44,7 @@ func deal(d deck, handSize int) (deck, deck) {
 }
 
 func (d deck) toString() string {
-	return strings.Join(d, ", ")
+	return strings.Join(d, ",")
 }
 
 func (d deck) saveToFile(filename string) error {
@@ -57,4 +58,7 @@ func newDeckFromFile(filename string) deck {
 		os.Exit(1)
 	}
 
+	s := strings.Split(string(bs), ",")
+
+	return s
 }
